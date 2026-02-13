@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>プレースホルダーアイコン生成</title>
+</head>
+<body>
+  <h1>アイコン生成中...</h1>
+  <p id="status">生成中...</p>
+  
+  <script>
+    // シンプルなグラデーションアイコンを生成
+    function createIcon(size) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      
+      // グラデーション背景
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#667eea');
+      gradient.addColorStop(1, '#764ba2');
+      
+      // 角丸四角形を描画
+      const radius = size / 5;
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(size - radius, 0);
+      ctx.quadraticCurveTo(size, 0, size, radius);
+      ctx.lineTo(size, size - radius);
+      ctx.quadraticCurveTo(size, size, size - radius, size);
+      ctx.lineTo(radius, size);
+      ctx.quadraticCurveTo(0, size, 0, size - radius);
+      ctx.lineTo(0, radius);
+      ctx.quadraticCurveTo(0, 0, radius, 0);
+      ctx.fill();
+      
+      // 画像アイコン（白い四角形）
+      const padding = size * 0.2;
+      const imgWidth = size * 0.6;
+      const imgHeight = size * 0.5;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.fillRect(padding, padding, imgWidth, imgHeight);
+      
+      // 山のシルエット（簡略版）
+      if (size >= 48) {
+        ctx.fillStyle = 'rgba(102, 126, 234, 0.7)';
+        ctx.beginPath();
+        ctx.moveTo(padding + imgWidth * 0.2, padding + imgHeight);
+        ctx.lineTo(padding + imgWidth * 0.4, padding + imgHeight * 0.4);
+        ctx.lineTo(padding + imgWidth * 0.6, padding + imgHeight);
+        ctx.fill();
+        
+        ctx.fillStyle = 'rgba(118, 75, 162, 0.7)';
+        ctx.beginPath();
+        ctx.moveTo(padding + imgWidth * 0.5, padding + imgHeight);
+        ctx.lineTo(padding + imgWidth * 0.7, padding + imgHeight * 0.2);
+        ctx.lineTo(padding + imgWidth * 0.9, padding + imgHeight);
+        ctx.fill();
+      }
+      
+      // 星（右上）
+      if (size >= 48) {
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(size * 0.85, size * 0.15, size * 0.04, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      return canvas;
+    }
+    
+    // 各サイズのアイコンをダウンロード
+    async function generateAndDownload() {
+      const sizes = [16, 48, 128];
+      
+      for (const size of sizes) {
+        const canvas = createIcon(size);
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `icon${size}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        // 少し待機
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      
+      document.getElementById('status').innerHTML = 
+        '<strong style="color: green;">✓ 完了!</strong><br>' +
+        'icon16.png, icon48.png, icon128.png がダウンロードされました。<br>' +
+        'これらのファイルを icons フォルダに移動してください。';
+    }
+    
+    // ページ読み込み後すぐに実行
+    window.onload = generateAndDownload;
+  </script>
+</body>
+</html>

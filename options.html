@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini Image Maker - 設定</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="options-page">
+  <div class="container">
+    <header>
+      <h1>🎨 Gemini Image Maker</h1>
+      <p class="subtitle">設定</p>
+    </header>
+
+    <main>
+      <div class="settings-card">
+        <h2>🔑 Google Gemini APIキー</h2>
+        <p class="description">
+          Google AI Studioから取得したAPIキーを入力してください。<br>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank">APIキーを取得する →</a>
+        </p>
+        
+        <div class="form-group">
+          <label for="apiKey">APIキー:</label>
+          <input 
+            type="password" 
+            id="apiKey" 
+            placeholder="AIza..."
+            autocomplete="off"
+          >
+          <button type="button" id="toggleApiKey" class="toggle-btn">表示</button>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <h2>⚙️ 画像生成設定</h2>
+        <p class="description">
+          画像生成時のプロンプトとアスペクト比を設定できます。
+        </p>
+        
+        <div class="form-group" style="flex-direction: column; align-items: stretch;">
+          <label for="promptPrefix">プロンプトのプレフィックス:</label>
+          <textarea 
+            id="promptPrefix" 
+            rows="3"
+            placeholder="次の説明を一番わかりやすくするシンプルな画像を生成してください"
+          ></textarea>
+          <small style="color: #666; margin-top: 5px;">
+            選択したテキストの前に追加される文章です
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="aspectRatio">アスペクト比:</label>
+          <select id="aspectRatio">
+            <option value="1:1">1:1 (正方形)</option>
+            <option value="3:4">3:4 (縦長)</option>
+            <option value="4:3">4:3 (横長)</option>
+            <option value="9:16">9:16 (縦長・スマホ)</option>
+            <option value="16:9">16:9 (横長・標準)</option>
+            <option value="21:9">21:9 (超ワイド)</option>
+          </select>
+        </div>
+
+        <div class="button-group">
+          <button id="saveBtn" class="btn btn-primary">💾 保存</button>
+          <button id="resetBtn" class="btn btn-secondary">🔄 デフォルトに戻す</button>
+        </div>
+
+        <div id="message" class="message"></div>
+      </div>
+
+      <div class="info-card">
+        <h3>使い方</h3>
+        <ol>
+          <li>Webページでテキストを選択します</li>
+          <li>右クリックして「選択テキストから画像を生成」を選択します</li>
+          <li>生成された画像が新しいタブで表示されます</li>
+          <li>画像を右クリックしてコピーまたはダウンロードできます</li>
+        </ol>
+      </div>
+    </main>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アイコン生成ツール</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .icon-preview {
+      display: flex;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .icon-item {
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #ddd;
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #764ba2;
+    }
+    .instructions {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gemini Image Maker - アイコン生成</h1>
+  
+  <div class="instructions">
+    <h3>使い方:</h3>
+    <ol>
+      <li>「アイコンを生成」ボタンをクリック</li>
+      <li>各サイズの画像を右クリックして「名前を付けて画像を保存」</li>
+      <li>icon16.png, icon48.png, icon128.png として保存</li>
+    </ol>
+  </div>
+
+  <button onclick="generateIcons()">アイコンを生成</button>
+
+  <div class="icon-preview">
+    <div class="icon-item">
+      <h3>16x16</h3>
+      <canvas id="canvas16" width="16" height="16"></canvas>
+    </div>
+    <div class="icon-item">
+      <h3>48x48</h3>
+      <canvas id="canvas48" width="48" height="48"></canvas>
+    </div>
+    <div class="icon-item">
+      <h3>128x128</h3>
+      <canvas id="canvas128" width="128" height="128"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="128" height="128" rx="24" fill="url(#grad1)"/>
+  <rect x="24" y="32" width="80" height="64" rx="8" fill="white" opacity="0.9"/>
+  <path d="M 36 80 L 52 56 L 68 80 Z" fill="#667eea" opacity="0.7"/>
+  <path d="M 60 80 L 80 48 L 100 80 Z" fill="#764ba2" opacity="0.7"/>
+  <circle cx="84" cy="48" r="8" fill="#FFD93D" opacity="0.8"/>
+  <circle cx="108" cy="20" r="3" fill="white"/>
+  <circle cx="116" cy="32" r="2" fill="white" opacity="0.8"/>
+  <circle cx="20" cy="24" r="2.5" fill="white" opacity="0.9"/>
+</svg>`;
+
+    function generateIcons() {
+      const sizes = [
+        { size: 16, canvasId: 'canvas16' },
+        { size: 48, canvasId: 'canvas48' },
+        { size: 128, canvasId: 'canvas128' }
+      ];
+
+      sizes.forEach(({ size, canvasId }) => {
+        const canvas = document.getElementById(canvasId);
+        const ctx = canvas.getContext('2d');
+        
+        const img = new Image();
+        const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        
+        img.onload = function() {
+          ctx.clearRect(0, 0, size, size);
+          ctx.drawImage(img, 0, 0, size, size);
+          URL.revokeObjectURL(url);
+        };
+        
+        img.src = url;
+      });
+      
+      alert('アイコンが生成されました!\n各画像を右クリックして保存してください。');
+    }
+  </script>
+</body>
+</html>
